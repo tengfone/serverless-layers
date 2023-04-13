@@ -14,6 +14,7 @@ class NodeJSRuntime {
       dependenciesPath: 'package.json',
       compatibleRuntimes: [runtimeDir],
       compatibleArchitectures: parent.compatibleArchitectures,
+      customBinaryPath: 'node',
       copyBeforeInstall: [
         '.npmrc',
         'yarn.lock',
@@ -48,7 +49,8 @@ class NodeJSRuntime {
   }
 
   async isCompatibleVersion(runtime) {
-    const osVersion = await this.parent.run('node --version');
+    const { customBinaryPath } = this.plugin.settings;
+    const osVersion = await this.parent.run(`${customBinaryPath} --version`);
     const [runtimeVersion] = runtime.match(/([0-9]+)\./);
     return {
       version: osVersion,

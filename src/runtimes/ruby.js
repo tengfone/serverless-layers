@@ -16,6 +16,7 @@ class RubyRuntime {
       dependenciesPath: 'Gemfile',
       compatibleRuntimes: [runtime],
       compatibleArchitectures: parent.compatibleArchitectures,
+      customBinaryPath: 'ruby',
       copyBeforeInstall: [
         'Gemfile.lock'
       ],
@@ -53,7 +54,8 @@ class RubyRuntime {
   }
 
   async isCompatibleVersion(runtime) {
-    const osVersion = await this.parent.run('ruby --version');
+    const { customBinaryPath } = this.plugin.settings;
+    const osVersion = await this.parent.run(`${customBinaryPath} --version`);
     const [runtimeVersion] = runtime.match(/[0-9].[0-9]/);
     return {
       version: osVersion,
